@@ -20,7 +20,7 @@ export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { data: session, isPending } = useSession();
-  // console.log("data", session, "is Pending:", isPending);
+  console.log("data", session, "is Pending:", isPending);
   const route = useRouter();
 
   const user = session?.user;

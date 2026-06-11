@@ -15,6 +15,7 @@ import {
   AlertCircle,
   Loader2,
 } from "lucide-react";
+import { Label, Radio, RadioGroup } from "@heroui/react";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -22,6 +23,7 @@ export default function RegisterPage() {
     email: "",
     password: "",
     confirm: "",
+    role: "seeker", // ← add this
   });
   const [errors, setErrors] = useState({});
   const [showPass, setShowPass] = useState(false);
@@ -49,8 +51,11 @@ export default function RegisterPage() {
     else if (form.confirm !== form.password)
       e.confirm = "Passwords do not match.";
 
+    if (!form.role) e.role = "Please select a role.";
     return e;
   };
+
+  console.log(form.role);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -102,6 +107,7 @@ export default function RegisterPage() {
       name: form.name.trim(),
       email: form.email.trim(),
       password: form.password,
+      role: form.role, // ← pass it here
     });
 
     if (error) {
@@ -398,6 +404,37 @@ export default function RegisterPage() {
                     <AlertCircle size={12} /> {errors.confirm}
                   </p>
                 )}
+              </div>
+
+              {/* Role selection */}
+
+              <div className="flex flex-col gap-4">
+                <Label>Role</Label>
+                <RadioGroup
+                  value={form.role}
+                  onChange={(value) =>
+                    setForm((prev) => ({ ...prev, role: value }))
+                  }
+                  name="role"
+                  orientation="horizontal"
+                >
+                  <Radio value="seeker">
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <Radio.Content>
+                      <Label>Job Seeker</Label>
+                    </Radio.Content>
+                  </Radio>
+                  <Radio value="recruiter">
+                    <Radio.Control>
+                      <Radio.Indicator />
+                    </Radio.Control>
+                    <Radio.Content>
+                      <Label>Recruiter</Label>
+                    </Radio.Content>
+                  </Radio>
+                </RadioGroup>
               </div>
 
               {/* Terms */}
