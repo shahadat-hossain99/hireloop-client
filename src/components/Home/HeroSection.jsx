@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Search, MapPin } from "lucide-react";
 import { Briefcase, Factory, Magnifier, Star } from "@gravity-ui/icons";
+import TypewriterHero from "../Ui/TypewriterHero ";
+import StatsCards from "../Ui/StatCard";
 
 const trendingTags = ["Product Designer", "AI Engineering", "Dev-ops Engineer"];
 
@@ -110,15 +112,17 @@ export default function HeroSection() {
         </div>
 
         {/* H1 */}
-        <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
+        {/* <h1 className="text-4xl font-bold leading-tight tracking-tight sm:text-5xl md:text-6xl">
           Find Your Dream Job Today
-        </h1>
+        </h1> */}
 
         {/* Subtitle */}
-        <p className="max-w-115 text-sm leading-relaxed text-slate-300 sm:text-base">
+        {/* <p className="max-w-115 text-sm leading-relaxed text-slate-300 sm:text-base">
           HireLoop connects top talent with world-class companies. Browse
           thousands of curated opportunities and land your next role — faster.
-        </p>
+        </p> */}
+
+        <TypewriterHero></TypewriterHero>
 
         {/* Search bar */}
         <div className="mt-2 w-full max-w-145">
@@ -216,7 +220,7 @@ export default function HeroSection() {
       {/* ══════════════════════════
           STATS CARDS
       ══════════════════════════ */}
-      <div className="relative z-10  mx-auto max-w-11/12 mb-10">
+      {/* <div className="relative z-10  mx-auto max-w-11/12 mb-10">
         <div className=" grid gap-6 grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <div
@@ -234,25 +238,27 @@ export default function HeroSection() {
                   hover:-translate-y-1
                 "
             >
-              {/* Card Glow */}
+              Card Glow
               <div className="absolute bottom-0 right-0 h-32 w-32 rounded-full bg-white/10 blur-3xl transition duration-300 group-hover:bg-violet-500/20" />
 
-              {/* Icon */}
+              Icon
               <div className="relative z-10 text-white/90 ">{stat.icon}</div>
 
-              {/* Number */}
+              Number
               <h3 className="relative z-10 mt-16 text-5xl font-bold tracking-tight">
                 {stat.value}
               </h3>
 
-              {/* Label */}
+              Label
               <p className="relative z-10 mt-4 text-base text-gray-300">
                 {stat.label}
               </p>
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
+
+      <StatsCards />
     </section>
   );
 }

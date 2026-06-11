@@ -4,9 +4,10 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@heroui/react";
 import { Menu, X } from "lucide-react";
+import { signOut, useSession } from "@/lib/auth-client";
 
 const navItems = [
   { label: "Browse Jobs", href: "/jobs" },
@@ -18,6 +19,16 @@ export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { data: session, isPending } = useSession();
+  // console.log("data", session, "is Pending:", isPending);
+  const route = useRouter();
+
+  const user = session?.user;
+
+  const handleSignOut = async () => {
+    await signOut();
+    route.push("/");
+  };
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -104,9 +115,45 @@ export default function Navbar() {
             <div className="mx-4 h-5 w-px shrink-0 bg-white/15" />
 
             {/* Sign In */}
-            <Link
-              href="/login"
-              className="
+            {user ? (
+              <div className="flex items-center gap-4">
+                <span className="text-sm text-slate-300">Hi, {user.name}!</span>
+                <Button
+                  onClick={handleSignOut}
+                  className="
+                  relative
+                  h-9
+                  rounded-lg
+                  px-5
+                  text-sm font-semibold
+                  text-white
+                  bg-gradient-to-r from-pink-500 to-red-500
+                  transition-all duration-300
+                  hover:scale-[1.03]
+                  hover:shadow-[0_0_20px_rgba(344,78,246,0.45)]
+                  active:scale-[0.98]
+                  overflow-hidden
+                  group
+                "
+                >
+                  {/* Shimmer */}
+                  <span
+                    className="
+                    absolute inset-0
+                    translate-x-[-100%]
+                    bg-gradient-to-r from-transparent via-white/20 to-transparent
+                    group-hover:translate-x-[100%]
+                    transition-transform duration-700
+                    pointer-events-none
+                  "
+                  />
+                  LogOut
+                </Button>
+              </div>
+            ) : (
+              <Link
+                href="/auth/signin"
+                className="
                 inline-flex items-center
                 px-4 py-2
                 text-sm font-medium
@@ -116,12 +163,13 @@ export default function Navbar() {
                 transition-all duration-200
                 hover:text-white hover:bg-white/[0.05]
               "
-            >
-              Sign In
-            </Link>
+              >
+                Sign In
+              </Link>
+            )}
 
             {/* CTA */}
-            <Link href="/register" className="ml-2 shrink-0">
+            <Link href="/auth/signup" className="ml-2 shrink-0">
               <Button
                 className="
                   relative
@@ -233,7 +281,7 @@ export default function Navbar() {
 
             <div className="flex flex-col gap-2">
               <Link
-                href="/login"
+                href="/auth/signin"
                 className="
                   px-4 py-3
                   text-sm font-medium
@@ -247,7 +295,7 @@ export default function Navbar() {
                 Sign In
               </Link>
 
-              <Link href="/register">
+              <Link href="/auth/signup">
                 <Button
                   className="
                     w-full h-11
