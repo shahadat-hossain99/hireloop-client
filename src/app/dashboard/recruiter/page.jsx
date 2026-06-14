@@ -12,6 +12,42 @@ import {
 const RecruiterDashboardPage = () => {
   const { data: session, isPending } = useSession();
 
+  // if (isPending) {
+  //   return (
+  //     <div className="w-full max-w-6xl mx-auto space-y-4 p-4 mt-7 animate-pulse">
+  //       {/* Title Section Skeleton */}
+  //       <div className="space-y-2 border-b border-[#2d2d2d] pb-5">
+  //         <div className="h-7 w-48 bg-[#1c1c1c] rounded-md border border-[#2d2d2d]" />
+  //         <div className="h-4 w-80 bg-[#1c1c1c] rounded-md border border-[#2d2d2d]" />
+  //       </div>
+
+  //       {/* Rows/Cards Skeleton */}
+  //       {[1, 2, 3].map((index) => (
+  //         <div
+  //           key={index}
+  //           className="bg-[#1c1c1c] border border-[#2d2d2d] rounded-xl p-5 space-y-4"
+  //         >
+  //           <div className="flex justify-between items-start">
+  //             <div className="space-y-2 w-1/3">
+  //               <div className="h-5 bg-[#242424] rounded-md" />
+  //               <div className="h-3 bg-[#242424]/60 rounded-md w-2/3" />
+  //             </div>
+  //             <div className="h-6 w-16 bg-[#242424] rounded-full" />
+  //           </div>
+  //           <div className="h-px bg-[#2d2d2d]/60 w-full" />
+  //           <div className="flex justify-between items-center pt-1">
+  //             <div className="h-3 bg-[#242424]/60 rounded-md w-24" />
+  //             <div className="flex gap-2">
+  //               <div className="h-8 w-8 bg-[#242424] rounded-lg" />
+  //               <div className="h-8 w-8 bg-[#242424] rounded-lg" />
+  //             </div>
+  //           </div>
+  //         </div>
+  //       ))}
+  //     </div>
+  //   );
+  // }
+
   if (isPending) {
     return (
       <div className="min-h-[400px] w-full flex flex-col items-center justify-center gap-4 bg-[#000000]">
