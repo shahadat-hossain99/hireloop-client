@@ -9,6 +9,7 @@ import {
   Button,
   Label,
   TextField,
+  toast,
 } from "@heroui/react";
 import {
   Briefcase,
@@ -17,6 +18,8 @@ import {
   Calendar,
   FileText,
 } from "@gravity-ui/icons";
+import { createJob } from "@/lib/actions/jobs";
+import { redirect } from "next/navigation";
 
 export default function PostJobPage() {
   const [isRemote, setIsRemote] = useState(false);
@@ -42,7 +45,7 @@ export default function PostJobPage() {
     { value: "GBP", label: "GBP (£)" },
   ];
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
@@ -52,14 +55,24 @@ export default function PostJobPage() {
       isRemote: isRemote,
       status: "active",
       companyId: "auto-filled-recruiter-company-id",
+      isPubliclyVisible: true,
     };
 
     console.log("Submitting Job Payload:", finalPayload);
+
+    const res = await createJob(finalPayload);
+    if (res.insertedId) {
+      toast.success("Job Posted Successfully");
+      console.log(e.Target);
+      e.target.reset();
+      setIsRemote(false);
+      redirect("/dashboard/recruiter/jobs");
+    }
   };
 
   return (
     <div className="min-h-screen bg-[#000000] text-[#ededed] flex items-center justify-center p-2 sm:p-4 antialiased">
-      <div className="w-full max-w-3xl bg-[#1c1c1c] border border-[#2d2d2d] rounded-xl shadow-2xl overflow-hidden my-4">
+      <div className="w-full max-w-[88%] lg:max-w-4xl bg-[#1c1c1c] border border-[#2d2d2d] rounded-xl shadow-2xl overflow-hidden my-4">
         {/* Header */}
         <div className="p-6 border-b border-[#2d2d2d]">
           <h1 className="text-xl font-semibold text-white">Post a New Job</h1>
@@ -72,7 +85,7 @@ export default function PostJobPage() {
         {/* Form Wrapper */}
         <Form
           onSubmit={handleSubmit}
-          validationBehavior="native"
+          // validationBehavior="native"
           className="p-4 sm:p-6 space-y-8"
         >
           {/* SECTION 1: JOB INFO */}

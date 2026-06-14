@@ -6,21 +6,31 @@ import { usePathname } from "next/navigation";
 
 import {
   LayoutSideContentLeft,
-  Bell,
+  PersonPlus,
   Envelope,
   Gear,
   House,
   Magnifier,
   Person,
+  BriefcaseFill,
 } from "@gravity-ui/icons";
 
 // Standard components from HeroUI v3
 import { Button, Drawer } from "@heroui/react";
 
 const navItems = [
-  { icon: House, label: "Dashboard", href: "/dashboard" },
-  { icon: Magnifier, label: "Find Jobs", href: "/dashboard/jobs" },
-  { icon: Bell, label: "Notifications", href: "/dashboard/notifications" },
+  { icon: House, label: "Dashboard", href: "/dashboard/recruiter" },
+  { icon: Magnifier, label: "Jobs", href: "/dashboard/recruiter/jobs" },
+  {
+    icon: PersonPlus,
+    label: "Post Jobs",
+    href: "/dashboard/recruiter/jobs/new",
+  },
+  {
+    icon: BriefcaseFill,
+    label: "Company Profile",
+    href: "/dashboard/recruiter/company",
+  },
   { icon: Envelope, label: "Messages", href: "/dashboard/messages" },
   { icon: Person, label: "Profile", href: "/dashboard/profile" },
   { icon: Gear, label: "Settings", href: "/dashboard/settings" },
