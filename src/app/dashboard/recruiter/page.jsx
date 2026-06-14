@@ -13,7 +13,25 @@ const RecruiterDashboardPage = () => {
   const { data: session, isPending } = useSession();
 
   if (isPending) {
-    return <div>Loading ......</div>;
+    return (
+      <div className="min-h-[400px] w-full flex flex-col items-center justify-center gap-4 bg-[#000000]">
+        <div className="relative w-12 h-12">
+          {/* Outer Blue Ring */}
+          <div className="absolute inset-0 border-2 border-t-[#3b82f6] border-r-transparent border-b-transparent border-l-transparent rounded-full animate-spin [animation-duration:0.8s]" />
+
+          {/* Inner Orange Ring (Slower/Reverse) */}
+          <div className="absolute inset-1 border-2 border-b-[#f97316] border-t-transparent border-r-transparent border-l-transparent rounded-full animate-spin [animation-duration:1.2s] reverse" />
+
+          {/* Decorative center glow */}
+          <div className="absolute inset-3 bg-white/10 rounded-full blur-sm" />
+        </div>
+
+        {/* Subtle Text */}
+        <p className="text-xs font-medium tracking-widest text-[#a1a1a1] uppercase animate-pulse">
+          Fetching Records
+        </p>
+      </div>
+    );
   }
 
   const user = session?.user;
