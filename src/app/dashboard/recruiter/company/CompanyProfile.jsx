@@ -22,7 +22,7 @@ import {
   Pencil,
   ChevronDown,
 } from "@gravity-ui/icons";
-// import { createCompany } from "@/lib/actions/companies";
+import { createCompany } from "@/lib/actions/companies";
 
 // Layout Shared Style Constants matching your design image
 const textInputClass =
@@ -129,12 +129,11 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
 
     console.log("Submitted Company Profile Data:", newCompanyData);
 
-    // const payload = await createCompany(newCompanyData);
+    const payload = await createCompany(newCompanyData);
 
-    // if(payload.insertedId) {
-
-    //     toast.success("Company profile created successfully!");
-    // }
+    if (payload.insertedId) {
+      toast.success("Company profile created successfully!");
+    }
 
     setErrors({});
     setIsEditing(false);
