@@ -24,97 +24,85 @@ export default function JobCard({ job }) {
   const jobId = job._id?.$oid || job._id;
 
   return (
-    <Card className="p-6 w-full max-w-[440px] border-none bg-zinc-900 text-zinc-100 rounded-[32px] shadow-2xl">
-      {/* Header */}
-      <Card.Header className="flex flex-col items-start gap-4 p-0 pb-3">
+    <Card className="w-full max-w-[440px] h-full flex flex-col p-6 border-none bg-zinc-900 text-zinc-100 rounded-[32px] shadow-2xl">
+      {/* HEADER */}
+      <Card.Header className="flex flex-col gap-4 p-0 pb-3">
+        {/* Company */}
         <div className="flex items-center gap-3">
           {job.companyLogo && (
             <img
               src={job.companyLogo}
-              alt={`${job.companyName || "Company"} logo`}
+              alt="logo"
               className="w-8 h-8 object-contain rounded-md"
             />
           )}
-
           <span className="text-lg font-medium text-zinc-300">
-            {job.companyName || "Confidential"}
+            {job.companyName || "Company"}
           </span>
         </div>
 
-        <Card.Title className="text-3xl font-semibold tracking-tight text-white leading-tight">
-          {job.title || "Untitled Position"}
+        {/* Title */}
+        <Card.Title className="text-3xl font-semibold text-white leading-tight line-clamp-2">
+          {job.title}
         </Card.Title>
 
-        {job.responsibilities && (
-          <Card.Description className="text-base text-zinc-400 line-clamp-2">
-            {job.responsibilities}
-          </Card.Description>
-        )}
+        {/* Description (fixed height behavior) */}
+        <Card.Description className="text-base text-zinc-400 line-clamp-2 min-h-[40px]">
+          {job.responsibilities}
+        </Card.Description>
       </Card.Header>
 
-      {/* Content */}
-      <Card.Content className="flex flex-col gap-5 p-0 py-4">
-        <div className="flex flex-wrap gap-2">
+      {/* CONTENT */}
+      <Card.Content className="flex flex-col gap-5 py-4 flex-grow">
+        {/* BADGES (IMPORTANT FIX) */}
+        <div className="flex flex-wrap gap-2 min-h-[42px]">
           {/* Location */}
-          {job.location && (
-            <div className="flex items-center gap-2 bg-zinc-800/60 px-4 py-2 rounded-full border border-zinc-800">
-              <MapPin className="text-purple-400 w-4 h-4" />
-              <span className="text-sm font-medium text-zinc-200">
-                {job.location} {job.isRemote && "(Remote)"}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 bg-zinc-800/60 px-4 py-2 rounded-full border border-zinc-800">
+            <MapPin className="text-purple-400 w-4 h-4" />
+            <span className="text-sm text-zinc-200">
+              {job.location || "Remote"} {job.isRemote && "(Remote)"}
+            </span>
+          </div>
 
           {/* Job Type */}
-          {job.jobType && (
-            <div className="flex items-center gap-2 bg-zinc-800/60 px-4 py-2 rounded-full border border-zinc-800">
-              <Briefcase className="text-purple-400 w-4 h-4" />
-              <span className="text-sm font-medium text-zinc-200 capitalize">
-                {job.jobType}
-              </span>
-            </div>
-          )}
+          <div className="flex items-center gap-2 bg-zinc-800/60 px-4 py-2 rounded-full border border-zinc-800">
+            <Briefcase className="text-purple-400 w-4 h-4" />
+            <span className="text-sm text-zinc-200 capitalize">
+              {job.jobType || "Full-time"}
+            </span>
+          </div>
 
           {/* Salary */}
-          <div className="flex items-center gap-2 bg-zinc-800/60 px-4 py-2 rounded-full border border-zinc-800 w-fit">
-            <div className="flex justify-center items-center bg-purple-500/20 rounded-full w-5 h-5">
-              <CircleDollar className="text-purple-400 w-3 h-3" />
-            </div>
-            <span className="text-sm font-medium text-zinc-200">
-              {salaryRange}
+          <div className="flex items-center gap-2 bg-zinc-800/60 px-4 py-2 rounded-full border border-zinc-800">
+            <CircleDollar className="text-purple-400 w-4 h-4" />
+            <span className="text-sm text-zinc-200">
+              {job.currency} {formatSalary(job.salaryMin)}–
+              {formatSalary(job.salaryMax)}
             </span>
           </div>
         </div>
 
-        {/* Requirements & Benefits */}
-        {(job.requirements || job.benefits) && (
-          <div className="text-xs text-zinc-500 space-y-1 border-t border-zinc-800/60 pt-3">
-            {job.requirements && (
-              <p>
-                <strong className="text-zinc-400">Requirements:</strong>{" "}
-                {job.requirements}
-              </p>
-            )}
-            {job.benefits && (
-              <p>
-                <strong className="text-zinc-400">Benefits:</strong>{" "}
-                {job.benefits}
-              </p>
-            )}
-          </div>
-        )}
+        {/* REQUIREMENTS BLOCK (fixed height consistency) */}
+        <div className="text-xs text-zinc-500 space-y-1 border-t border-zinc-800/60 pt-3 min-h-[60px]">
+          <p>
+            <strong className="text-zinc-400">Requirements:</strong>{" "}
+            {job.requirements || "Not specified"}
+          </p>
+          <p>
+            <strong className="text-zinc-400">Benefits:</strong>{" "}
+            {job.benefits || "Standard benefits"}
+          </p>
+        </div>
       </Card.Content>
 
-      {/* Footer */}
-      <Card.Footer className="p-0 pt-4">
+      {/* FOOTER (FIXED POSITION) */}
+      <Card.Footer className="mt-auto pt-4 p-0">
         <Link
-          href={`/jobs/${jobId}`}
-          className="group flex items-center gap-2 bg-transparent hover:bg-zinc-800/40 p-0 text-base font-medium text-white transition-all duration-200"
-          variant="light"
-          disableRipple
+          href={`/jobs/${job._id}`}
+          className="group flex items-center gap-2 text-white hover:bg-zinc-800/40 transition-all"
         >
           Apply Now
-          <ArrowRight className="group-hover:translate-x-1 text-zinc-400 group-hover:text-white w-4 h-4 transition-transform duration-200" />
+          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </Link>
       </Card.Footer>
     </Card>
