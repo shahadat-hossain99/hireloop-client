@@ -2,10 +2,12 @@ import React from "react";
 import { getCompanyJobs } from "@/lib/api/jobs";
 import { Chip, Table, Button } from "@heroui/react";
 import { Eye, Pencil, TrashBin } from "@gravity-ui/icons";
+import { getLoggedInRecruiterCompany } from "@/lib/api/companies";
 
 const RecruiterJobs = async () => {
-  const companyId = "auto-filled-recruiter-company-id";
-  const jobs = (await getCompanyJobs(companyId)) || [];
+  const company = await getLoggedInRecruiterCompany();
+
+  const jobs = (await getCompanyJobs(company._id)) || [];
 
   return (
     <div className="min-h-screen bg-[#000000] text-[#ededed] p-4 sm:p-6 antialiased mt-7">
