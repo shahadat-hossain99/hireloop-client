@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { Card, Button, Chip, Separator } from "@heroui/react";
 
 import { getJobById } from "@/lib/api/jobs";
+import Link from "next/link";
 
 const JobDetailsPage = async ({ params }) => {
   const { id } = await params;
@@ -130,7 +131,7 @@ const JobDetailsPage = async ({ params }) => {
                   size="lg"
                   className="w-full font-semibold"
                 >
-                  Apply Now
+                  <Link href={`/jobs/${id}/apply`}> Apply Now</Link>
                 </Button>
 
                 <Separator className="my-6 bg-white/10" />
