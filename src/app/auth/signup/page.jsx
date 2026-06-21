@@ -16,6 +16,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { Label, Radio, RadioGroup } from "@heroui/react";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({
@@ -27,10 +28,14 @@ export default function RegisterPage() {
   });
   const [errors, setErrors] = useState({});
   const [showPass, setShowPass] = useState(false);
+  const router = useRouter();
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [apiError, setApiError] = useState("");
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   /* ── Validation ── */
   const validate = () => {
@@ -118,6 +123,7 @@ export default function RegisterPage() {
 
     setSuccess(true);
     setLoading(false);
+    setTimeout(() => router.push(redirectTo), 1000);
   };
 
   /* ── Password strength ── */
@@ -495,7 +501,7 @@ export default function RegisterPage() {
           <p className="mt-6 text-center text-xs text-slate-600">
             Already have an account?{" "}
             <Link
-              href="/auth/signin"
+              href={`/auth/signin?redirect=${redirectTo}`}
               className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
             >
               Sign in to HireLoop

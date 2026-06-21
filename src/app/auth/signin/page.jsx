@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "@/lib/auth-client";
 import {
   Eye,
@@ -23,6 +23,9 @@ export default function SignInPage() {
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   /* ── Validation ── */
   const validate = () => {
@@ -96,7 +99,7 @@ export default function SignInPage() {
 
     setSuccess(true);
     setLoading(false);
-    setTimeout(() => router.push("/"), 1000);
+    setTimeout(() => router.push(redirectTo), 1000);
   };
 
   /* ── Success state ── */
@@ -293,7 +296,7 @@ export default function SignInPage() {
           <p className="mt-6 text-center text-xs text-slate-600">
             Don&apos;t have an account?{" "}
             <Link
-              href="/auth/signup"
+              href={`/auth/signup?redirect=${redirectTo}`}
               className="text-violet-400 hover:text-violet-300 transition-colors font-medium"
             >
               Create one on HireLoop
