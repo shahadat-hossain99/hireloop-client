@@ -12,7 +12,7 @@ import { signOut, useSession } from "@/lib/auth-client";
 const navItems = [
   { label: "Browse Jobs", href: "/jobs" },
   { label: "Companies", href: "/companies" },
-  { label: "Pricing", href: "/pricing" },
+  { label: "Pricing", href: "/plans" },
 ];
 
 export default function Navbar() {
