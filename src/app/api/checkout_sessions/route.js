@@ -26,6 +26,9 @@ export async function POST(request) {
           quantity: 1,
         },
       ],
+      metadata: {
+        planId,
+      },
       mode: "subscription",
       success_url: `${origin}/plans/success?session_id={CHECKOUT_SESSION_ID}`,
     });

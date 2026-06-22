@@ -107,7 +107,7 @@ export default function RegisterPage() {
 
     setLoading(true);
     setApiError("");
-    const plan = role === "seeker" ? "seeker_free" : "recruiter_free";
+    const plan = form.role === "seeker" ? "seeker_free" : "recruiter_free";
 
     const { data, error } = await signUp.email({
       name: form.name.trim(),

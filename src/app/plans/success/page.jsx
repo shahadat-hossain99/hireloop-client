@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import { stripe } from "../../../lib/stripe";
+import { createSubscription } from "@/lib/actions/subscription";
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -22,7 +23,7 @@ export default async function Success({ searchParams }) {
     );
   }
 
-  const { status, customer_details } = session;
+  const { status, customer_details, metadata } = session;
   const customerEmail = customer_details?.email;
 
   if (status === "open") {
@@ -30,6 +31,14 @@ export default async function Success({ searchParams }) {
   }
 
   if (status === "complete") {
+    const subsInfo = {
+      email: customerEmail,
+      planId: metadata.planId,
+    };
+    // new plan info added to db
+    const result = await createSubscription(subsInfo);
+    console.log(result);
+
     return (
       <div className="w-full min-h-[80vh] flex flex-col justify-center items-center px-4 sm:px-6">
         <div className="max-w-md w-full bg-zinc-900 border border-zinc-800 rounded-2xl p-8 shadow-xl text-center">
