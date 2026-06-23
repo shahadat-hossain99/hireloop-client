@@ -21,6 +21,7 @@ export default function Navbar() {
   const dashboardLinks = {
     seeker: "/dashboard/seeker",
     recruiter: "/dashboard/recruiter",
+    admin: "/dashboard/admin",
   };
 
   // Use useMemo to derive navItems reactively
@@ -39,7 +40,7 @@ export default function Navbar() {
     }
 
     return baseItems;
-  }, [user?.email, user?.role]); // Recalculate when user data changes
+  }, [dashboardLinks, user?.email, user?.role]); // Recalculate when user data changes
 
   const handleSignOut = async () => {
     await signOut();

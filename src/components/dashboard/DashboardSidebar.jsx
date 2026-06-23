@@ -16,6 +16,7 @@ import {
   BriefcaseFill,
   CreditCard,
   Bookmark,
+  PersonFill,
 } from "@gravity-ui/icons";
 
 // Standard components from HeroUI v3
@@ -57,9 +58,24 @@ const seekerNav = [
   { icon: Gear, label: "Settings", href: "/dashboard/settings" },
 ];
 
+const adminNav = [
+  { icon: House, label: "Dashboard", href: "/dashboard/admin" },
+  { icon: PersonFill, label: "Users", href: "/dashboard/admin/users" },
+
+  {
+    icon: BriefcaseFill,
+    label: "Companies",
+    href: "/dashboard/admin/companies",
+  },
+  { icon: Person, label: "Jobs", href: "/dashboard/admin/jobs" },
+  { icon: CreditCard, label: "Payments", href: "/dashboard/admin/Payments" },
+  { icon: Gear, label: "Settings", href: "/dashboard/admin/settings" },
+];
+
 const navLinksMapping = {
   seeker: seekerNav,
   recruiter: recruiterNav,
+  admin: adminNav,
 };
 
 function SidebarNavigation({ navItems, pathname, onItemClick }) {
@@ -116,6 +132,9 @@ export function DashboardSidebar() {
 
     return navLinksMapping[role] || navLinksMapping.seeker;
   }, [session?.user]);
+
+  console.log(session?.user);
+  console.log(session?.user?.role);
 
   // Explicit, fail-safe open and close controllers
   const closeDrawer = () => setIsOpen(false);
