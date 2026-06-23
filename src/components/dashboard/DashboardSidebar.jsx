@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "@/lib/auth-client";
 
 import {
   LayoutSideContentLeft,
@@ -13,12 +14,14 @@ import {
   Magnifier,
   Person,
   BriefcaseFill,
+  CreditCard,
+  Bookmark,
 } from "@gravity-ui/icons";
 
 // Standard components from HeroUI v3
 import { Button, Drawer } from "@heroui/react";
 
-const navItems = [
+const recruiterNav = [
   { icon: House, label: "Dashboard", href: "/dashboard/recruiter" },
   { icon: Magnifier, label: "Jobs", href: "/dashboard/recruiter/jobs" },
   {
@@ -36,7 +39,30 @@ const navItems = [
   { icon: Gear, label: "Settings", href: "/dashboard/settings" },
 ];
 
-function SidebarNavigation({ pathname, onItemClick }) {
+const seekerNav = [
+  { icon: House, label: "Dashboard", href: "/dashboard/seeker" },
+  { icon: Magnifier, label: "Jobs", href: "/dashboard/seeker/jobs" },
+  {
+    icon: Bookmark,
+    label: "Saved Jobs",
+    href: "/dashboard/seeker/saved-jobs", // Fixed typo in URL
+  },
+  {
+    icon: BriefcaseFill,
+    label: "Applications",
+    href: "/dashboard/seeker/applications",
+  },
+  { icon: CreditCard, label: "Billing", href: "/dashboard/seeker/billing" },
+  { icon: Person, label: "Profile", href: "/dashboard/profile" },
+  { icon: Gear, label: "Settings", href: "/dashboard/settings" },
+];
+
+const navLinksMapping = {
+  seeker: seekerNav,
+  recruiter: recruiterNav,
+};
+
+function SidebarNavigation({ navItems, pathname, onItemClick }) {
   return (
     <nav className="space-y-1.5">
       {navItems.map((item) => {
@@ -81,16 +107,33 @@ function SidebarNavigation({ pathname, onItemClick }) {
 export function DashboardSidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const { data: session, isPending } = useSession();
+
+  // Derive nav items based on user role
+  const navItems = useMemo(() => {
+    const user = session?.user;
+    const role = user?.role || "seeker"; // Default to seeker if no role
+
+    return navLinksMapping[role] || navLinksMapping.seeker;
+  }, [session?.user]);
 
   // Explicit, fail-safe open and close controllers
   const closeDrawer = () => setIsOpen(false);
+
+  // Show loading state while session is pending
+  if (isPending) {
+    return (
+      <div className="hidden lg:flex w-72 shrink-0 flex-col rounded-[24px] border border-white/[0.06] bg-[#0d0d14] p-6 mt-7 items-center justify-center">
+        <div className="animate-pulse text-slate-400">Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <>
       {/* 1. Mobile Floating Trigger Menu Button */}
       <Button
         onClick={() => {
-          console.log("clicked");
           setIsOpen(!isOpen);
         }}
         className="
@@ -136,7 +179,7 @@ export function DashboardSidebar() {
           </p>
         </div>
 
-        <SidebarNavigation pathname={pathname} />
+        <SidebarNavigation navItems={navItems} pathname={pathname} />
 
         <div className="mt-auto pt-6">
           <div className="relative overflow-hidden rounded-2xl border border-white/[0.04] bg-gradient-to-b from-[#13131f] to-[#09090f] p-4 shadow-xl">
@@ -156,12 +199,10 @@ export function DashboardSidebar() {
       </aside>
 
       {/* 3. Mobile Sidebar Drawer View */}
-      {/* Removed onClose - it doesn't exist in HeroUI v3, use onOpenChange instead [web:16] */}
       <Drawer
         key={`drawer-${isOpen}`}
         isOpen={isOpen}
         onOpenChange={(newOpen) => {
-          console.log("onOpenChange called:", newOpen);
           setIsOpen(newOpen);
         }}
       >
@@ -181,6 +222,7 @@ export function DashboardSidebar() {
 
               <Drawer.Body className="p-0">
                 <SidebarNavigation
+                  navItems={navItems}
                   pathname={pathname}
                   onItemClick={closeDrawer}
                 />

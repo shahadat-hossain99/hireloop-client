@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/set-state-in-effect */
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -9,21 +9,37 @@ import { Button } from "@heroui/react";
 import { Menu, X } from "lucide-react";
 import { signOut, useSession } from "@/lib/auth-client";
 
-const navItems = [
-  { label: "Browse Jobs", href: "/jobs" },
-  { label: "Companies", href: "/companies" },
-  { label: "Pricing", href: "/plans" },
-];
-
 export default function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { data: session, isPending } = useSession();
-  console.log("data", session, "is Pending:", isPending);
   const route = useRouter();
 
   const user = session?.user;
+
+  const dashboardLinks = {
+    seeker: "/dashboard/seeker",
+    recruiter: "/dashboard/recruiter",
+  };
+
+  // Use useMemo to derive navItems reactively
+  const navItems = useMemo(() => {
+    const baseItems = [
+      { label: "Browse Jobs", href: "/jobs" },
+      { label: "Companies", href: "/companies" },
+      { label: "Pricing", href: "/plans" },
+    ];
+
+    if (user?.email) {
+      baseItems.push({
+        label: "Dashboard",
+        href: dashboardLinks[user?.role || "seeker"],
+      });
+    }
+
+    return baseItems;
+  }, [user?.email, user?.role]); // Recalculate when user data changes
 
   const handleSignOut = async () => {
     await signOut();
@@ -114,7 +130,7 @@ export default function Navbar() {
             {/* Separator */}
             <div className="mx-4 h-5 w-px shrink-0 bg-white/15" />
 
-            {/* Sign In */}
+            {/* Sign In / User Menu */}
             {user ? (
               <div className="flex items-center gap-4">
                 <span className="text-sm text-slate-300">Hi, {user.name}!</span>
@@ -280,35 +296,53 @@ export default function Navbar() {
             <div className="my-4 h-px bg-white/[0.07]" />
 
             <div className="flex flex-col gap-2">
-              <Link
-                href="/auth/signin"
-                className="
-                  px-4 py-3
-                  text-sm font-medium
-                  text-slate-300
-                  rounded-xl
-                  hover:bg-white/[0.05]
-                  hover:text-white
-                  transition-all duration-200
-                "
-              >
-                Sign In
-              </Link>
-
-              <Link href="/auth/signup">
+              {user ? (
                 <Button
+                  onClick={handleSignOut}
                   className="
                     w-full h-11
                     rounded-xl
-                    bg-gradient-to-r from-indigo-500 to-violet-600
+                    bg-gradient-to-r from-pink-500 to-red-500
                     text-white text-sm font-semibold
-                    hover:shadow-[0_0_20px_rgba(139,92,246,0.35)]
+                    hover:shadow-[0_0_20px_rgba(344,78,246,0.35)]
                     transition-all duration-300
                   "
                 >
-                  Get Started
+                  LogOut
                 </Button>
-              </Link>
+              ) : (
+                <>
+                  <Link
+                    href="/auth/signin"
+                    className="
+                      px-4 py-3
+                      text-sm font-medium
+                      text-slate-300
+                      rounded-xl
+                      hover:bg-white/[0.05]
+                      hover:text-white
+                      transition-all duration-200
+                    "
+                  >
+                    Sign In
+                  </Link>
+
+                  <Link href="/auth/signup">
+                    <Button
+                      className="
+                        w-full h-11
+                        rounded-xl
+                        bg-gradient-to-r from-indigo-500 to-violet-600
+                        text-white text-sm font-semibold
+                        hover:shadow-[0_0_20px_rgba(139,92,246,0.35)]
+                        transition-all duration-300
+                      "
+                    >
+                      Get Started
+                    </Button>
+                  </Link>
+                </>
+              )}
             </div>
           </div>
         </div>
