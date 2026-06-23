@@ -3,11 +3,16 @@
 import { useState } from "react";
 import { toast } from "@heroui/react";
 
+import { updateCompany } from "@/lib/actions/companies";
+import { useRouter } from "next/navigation";
+
 // Replace this with your actual Server Action import
 // import { updateCompanyStatus } from "@/lib/actions/companies";
 
 export default function CompanyActions({ companyId, currentStatus }) {
   const [isLoading, setIsLoading] = useState(false);
+
+  const router = useRouter(); // 2. For refreshing the page
 
   const handleStatusUpdate = async (newStatus) => {
     setIsLoading(true);
@@ -15,11 +20,21 @@ export default function CompanyActions({ companyId, currentStatus }) {
       // Example API call. Replace with your actual mutation logic.
       // await updateCompanyStatus(companyId, newStatus);
 
+      // 3. Call the Server Action with the ID and the new status
+      const result = await updateCompany(companyId, { status: newStatus });
+
+      // Optional: Check if your serverMutation returns an error
+      if (result.error) throw new Error(result.error);
+
       console.log(`Updating ${companyId} to ${newStatus}`);
       toast.success(`Company status updated to ${newStatus}`);
 
       // Refresh the page to show the new status immediately
-      window.location.reload();
+      //   window.location.reload();
+
+      // 4. Use router.refresh() instead of window.location.reload()
+      // This updates the UI from the server without a full page flash.
+      router.refresh();
     } catch (error) {
       toast.error("Failed to update status");
     } finally {
